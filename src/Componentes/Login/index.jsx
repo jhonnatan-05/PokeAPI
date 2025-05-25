@@ -1,11 +1,23 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importante
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabase';
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Importante
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Verificar si hay una sesión activa
+    const checkSession = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // Si hay una sesión activa, redirigir al usuario a la página principal
+        navigate('/');
+      }
+    };
+    checkSession();
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
